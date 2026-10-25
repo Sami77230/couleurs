@@ -26,12 +26,13 @@
     padding: 6px 12px; border-radius: 8px; cursor: pointer;
   }
   .hex:hover { background: rgba(127,127,127,.18); }
-  .lock {
+  .btns { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+  .lock, .copy {
     font: inherit; font-size: .85rem; color: inherit; background: none;
     border: 1.5px solid currentColor; border-radius: 99px; padding: 5px 14px;
     cursor: pointer; opacity: .55;
   }
-  .lock:hover { opacity: 1; }
+  .lock:hover, .copy:hover { opacity: 1; }
   .swatch.locked .lock { opacity: 1; background: currentColor; }
   .swatch.locked .lock span { color: var(--bg); }
   button:focus-visible { outline: 3px solid currentColor; outline-offset: 2px; }
@@ -167,7 +168,17 @@ function render() {
     lock.setAttribute("aria-pressed", state.locked[i]);
     lock.onclick = () => { state.locked[i] = !state.locked[i]; render(); };
 
-    el.append(code, lock);
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "copy";
+    copyBtn.textContent = "Copier";
+    copyBtn.setAttribute("aria-label", "Copier la couleur " + hex);
+    copyBtn.onclick = () => copy(hex.toUpperCase(), hex.toUpperCase() + " copié");
+
+    const btns = document.createElement("div");
+    btns.className = "btns";
+    btns.append(copyBtn, lock);
+
+    el.append(code, btns);
     $palette.append(el);
   });
   $mode.textContent = state.mode;
